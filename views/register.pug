@@ -1,0 +1,23 @@
+extends layouts/login-layout.pug
+block content
+  .loginContainer
+    h1 Register
+    form(method="post", onsubmit="event.preventDefault(); validateForm()")
+      input(type="text", name="firstName", placeholder="First Name", required="")
+      input(type="text", name="lastName", placeholder="Last Name", required="")
+      input(type="email", name="email", placeholder="Email", required="")
+      input(type="text", name="username", placeholder="Username", required="")
+      input#password(type="password", name="password", placeholder="Password", required="")
+      input#passwordConf(type="password", name="passwordConf", placeholder="Confirm Password", required="")
+      input(type="submit", value="Sign Up")
+    a(href="/login") Already have an accout? Login here
+  script.
+    const form = document.querySelector('form');
+    const validateForm = () => {
+      const password = form.elements.password;
+      const passwordConf = form.elements.passwordConf;
+      if (password.value !== passwordConf.value)
+        alert('Passwords do not match. Please enter again');
+      else form.submit();
+    };
+    

@@ -1,29 +1,48 @@
 import path from 'path';
 import express from 'express';
-import * as middleware from './middleware.js';
+import session from 'express-session';
+import dotenv from 'dotenv';
+import * as middleware from './middlewares/requireLogin.middleware.js';
 import loginRouter from './routes/login.route.js';
 import registerRouter from './routes/register.route.js';
 import __dirname from './constants/__dirname.js';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+dotenv.config();
 
+const app = express();
+
+// Setting the view engine
 app.set('view engine', 'pug');
 app.set('views', './views');
 
+// Setting up the middlewares
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Setting up for session
+app.set('trust proxy', 1);
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Setting up the route handlers
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 
 app.get('/', middleware.requireLogin, (req, res, next) => {
-  const payload = {
-    pageTitle: 'Home',
-
-  };
-  res.render('home', payload);
+  const name = req.session?.user.username;
+  return res.render('home', {
+    pageTitle: name ? `${name} | Home` : 'Home'
+  });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// 404 - Not Found
+app.all('*', (req, res, next) => {
+  return res.render('404', {
+    pageTtile: 'Page Not Found'
+  });
 });
+
+export default app;

@@ -36,7 +36,8 @@ app.use('/logout', logoutRouter);
 app.get('/', middleware.requireLogin, (req, res, next) => {
   // const name = req.session?.user.username;
   return res.render('home', {
-    title: 'Home' 
+    title: 'Home',
+    userLoggedIn: req.session?.user
   });
 });
 

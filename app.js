@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import * as middleware from './middlewares/requireLogin.middleware.js';
 import loginRouter from './routes/login.route.js';
 import registerRouter from './routes/register.route.js';
+import logoutRouter from './routes/logout.route.js';
 import __dirname from './constants/__dirname.js';
 
 dotenv.config();
@@ -30,11 +31,12 @@ app.use(session({
 // Setting up the route handlers
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
+app.use('/logout', logoutRouter);
 
 app.get('/', middleware.requireLogin, (req, res, next) => {
-  const name = req.session?.user.username;
+  // const name = req.session?.user.username;
   return res.render('home', {
-    pageTitle: name ? `${name} | Home` : 'Home'
+    title: 'Home' 
   });
 });
 

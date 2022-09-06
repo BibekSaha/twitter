@@ -2,10 +2,11 @@ import path from 'path';
 import express from 'express';
 import session from 'express-session';
 import dotenv from 'dotenv';
-import * as middleware from './middlewares/requireLogin.middleware.js';
+import * as authMiddleware from './middlewares/requireLogin.middleware.js';
 import loginRouter from './routes/login.route.js';
 import registerRouter from './routes/register.route.js';
 import logoutRouter from './routes/logout.route.js';
+import postsRouter from './routes/api/posts.route.js';
 import __dirname from './constants/__dirname.js';
 
 dotenv.config();
@@ -18,6 +19,7 @@ app.set('views', './views');
 
 // Setting up the middlewares
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Setting up for session
@@ -32,8 +34,9 @@ app.use(session({
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/logout', logoutRouter);
+app.use('/api/v1/posts', postsRouter);
 
-app.get('/', middleware.requireLogin, (req, res, next) => {
+app.get('/', authMiddleware.requireLogin, (req, res, next) => {
   // const name = req.session?.user.username;
   return res.render('home', {
     title: 'Home',
@@ -42,10 +45,10 @@ app.get('/', middleware.requireLogin, (req, res, next) => {
 });
 
 // 404 - Not Found
-app.all('*', (req, res, next) => {
-  return res.render('404', {
-    pageTtile: 'Page Not Found'
-  });
-});
+// app.all('*', (req, res, next) => {
+//   return res.render('404', {
+//     pageTtile: 'Page Not Found'
+//   });
+// });
 
 export default app;

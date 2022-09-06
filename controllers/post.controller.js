@@ -22,3 +22,16 @@ export const createPost = async (req, res) => {
     return res.sendStatus(400);
   }
 };
+
+export const getPosts = async (req, res) => {
+  try {
+    const posts = await Post.find({}).populate('postedBy');
+    return res.status(200).json({
+      status: 'success',
+      data: posts
+    });
+  } catch (err) {
+    console.log(error);
+    return res.sendStatus(400);
+  }
+};

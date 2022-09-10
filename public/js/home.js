@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log(posts);
   if (!posts.length)
     postPrepend(`<p class="noResults">Nothing to show</p>`, postContainer);
-  else
-    posts.forEach(post => postPrepend(createPostHTML(post), postContainer));
+  else {
+    postContainer.innerHTML = '';
+    posts.forEach(
+      post => postPrepend(createPostHTML(post), postContainer)
+    );
+  }
 });

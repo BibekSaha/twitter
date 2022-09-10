@@ -6,6 +6,10 @@ const router = express.Router();
 router
   .route('/')
   .get(postController.getPosts)
-  .post(postController.createPost);
+  .post(postController.createPost)
+
+router
+  .route('/:id/like')
+  .put(postController.updateLike);
 
 export default router;

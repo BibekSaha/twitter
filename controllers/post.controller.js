@@ -35,3 +35,16 @@ export const getPosts = async (req, res) => {
     return res.sendStatus(400);
   }
 };
+
+export const updateLike = async (req, res) => {
+  try {
+    const { id: postId } = req.params;
+    const { _id: userId } = req.session.user;
+    console.log(req.session.user);
+    const isLiked = req.session.user.likes?.includes(postId);
+    console.log('isLiked', isLiked);
+    return res.json({ text: 'Hello World' });
+  } catch (err) {
+
+  }
+};
